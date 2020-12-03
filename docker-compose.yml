@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  dev:
+    image: golang:1.15-alpine
+    working_dir: /source
+    command: >
+      sh -c "apk --no-cache --no-progress add gcc git musl-dev;
+             go install github.com/unchartedsoftware/witch;
+             witch --cmd=\"go test -v -p 1 ./...\" --watch=\"*.mod,**/*.go\""
+    environment:
+      MYSQL_HOST: mysql:3306
+      POSTGRES_HOST: postgres:5432
+    volumes:
+      - .:/source
+      - $GOPATH/pkg/mod/cache:/go/pkg/mod/cache
+    depends_on:
+      - mysql
+      - postgres
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_PASSWORD: password
