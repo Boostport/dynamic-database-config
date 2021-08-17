@@ -1,7 +1,7 @@
 # Dynamic Config Wrapper Driver for Go's database/sql Package
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/Boostport/dynamic-database-config)](https://pkg.go.dev/github.com/Boostport/dynamic-database-config)
-[![Tests Status](https://github.com/Boostport/dynamic-database-config/workflows/Tests/badge.svg)](https://github.com/Boostport/dynamic-database-config)
+[![Tests Status](https://github.com/Boostport/dynamic-database-config/workflows/Test/badge.svg)](https://github.com/Boostport/dynamic-database-config)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d453f2dc545b3f630aad/test_coverage)](https://codeclimate.com/github/Boostport/dynamic-database-config/test_coverage)
 
 ## Why do we need this?
