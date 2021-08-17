@@ -11,7 +11,7 @@ import (
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/lib/pq"
-	"github.com/lthibault/jitterbug"
+	"github.com/lthibault/jitterbug/v2"
 )
 
 type mySQLCredentials struct {
@@ -41,6 +41,27 @@ func TestMySQLDriver(t *testing.T) {
 
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	ticker := time.NewTicker(1 * time.Second)
+	timer := time.NewTimer(10 * time.Second)
+
+mySQLAvailable:
+	for {
+		select {
+		case <-ticker.C:
+			err = rootDB.Ping()
+
+			if err == nil {
+				ticker.Stop()
+				timer.Stop()
+				break mySQLAvailable
+			}
+
+		case <-timer.C:
+			ticker.Stop()
+			t.Fatal("Timed out while waiting for MySQL server")
+		}
 	}
 
 	defer func() {
@@ -100,6 +121,7 @@ func TestMySQLDriver(t *testing.T) {
 	}
 
 	db := sql.OpenDB(Driver{CreateConnectorFunc: creds.createConnector})
+	db.SetConnMaxLifetime(2 * time.Second)
 
 	_, err = db.Exec("CREATE TABLE test_table (id integer not null)")
 
